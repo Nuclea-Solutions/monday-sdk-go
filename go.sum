@@ -1,0 +1,6 @@
+github.com/Nuclea-Solutions/graphql v0.2.3 h1:sqz2r++TR3FALybFtwsXvvsR/U4nMsOwSA+TAXS1Whg=
+github.com/Nuclea-Solutions/graphql v0.2.3/go.mod h1:cSYlRqWpee/jozF/05vkJvo8hPSb0zsHDR4c20wKxEA=
+github.com/matryer/is v1.4.0 h1:sosSmIWwkYITGrxZ25ULNDeKiMNzFSr4V/eqBQP0PeE=
+github.com/matryer/is v1.4.0/go.mod h1:8I/i5uYgLzgsgEloJE1U6xx5HkBQpAZvepWuujKwMRU=
+github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
+github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
