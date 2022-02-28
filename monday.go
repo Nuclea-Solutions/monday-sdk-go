@@ -17,6 +17,7 @@ type Service interface {
 	GetBoards() ([]Board, error)
 	GetItemsByColumnValues(boardID int, columnID string, columnValue string) ([]Item, error)
 	AddItem(boardID int, itemName string, columnValues map[string]interface{}) (string, error)
+	AddSubitem(parentItemID int, itemName string, columnValues map[string]interface{}) (string, error)
 	AddFileToColumn(itemID int, columnID string, fileName string, file io.Reader) (string, error)
 	ChangeMultipleColumnValues(boardID int, itemID int, columnValues map[string]interface{}) (string, error)
 	DeleteItem(itemID int) (string, error)
@@ -251,6 +252,35 @@ func (c Client) DeleteItem(itemID int) (string, error) {
 	err := c.runRequest(req, &response)
 	return response.DeleteItem.ID, err
 
+}
+
+// AddSubitem adds a subitem to a board on Monday
+func (c Client) AddSubitem(parentItemID int, itemName string, columnValues map[string]interface{}) (string, error) {
+	req := graphql.NewRequest(`
+    mutation ($parentItemID: Int!, $itemName: String!, $columnValues: JSON!) {
+      create_subitem(parent_item_id: $parentItemID, item_name: $itemName, column_values: $columnValues) {
+        id
+      }
+    }
+  `)
+
+	req.Var("parentItemID", parentItemID)
+	req.Var("itemName", itemName)
+
+	jsonValues, err := json.Marshal(&columnValues)
+	if err != nil {
+		return "", err
+	}
+
+	req.Var("columnValues", string(jsonValues))
+
+	var response struct {
+		CreateSubItem Item `json:"create_subitem"`
+	}
+
+	err = c.runRequest(req, &response)
+
+	return response.CreateSubItem.ID, err
 }
 
 // AddFileToColumn adds a file to a File column on Monday

@@ -39,6 +39,10 @@ func (c MockClient) AddItem(boardID int, itemName string, columnValues map[strin
 	return "1234567890", nil
 }
 
+func (c MockClient) AddSubItem(parentItemID int, itemName string, columnValues map[string]interface{} (string, error) {
+  return "1234567890", nil
+}
+
 func (c MockClient) AddFileToColumn(itemID int, columnID string, fileName string, file io.Reader) (string, error) {
 	return "1234567890", nil
 }
