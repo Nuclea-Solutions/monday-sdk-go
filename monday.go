@@ -62,6 +62,7 @@ func (c Client) GetItemsByColumnValues(boardID int, columnID string, columnValue
         name
         column_values {
           id
+          title
           value
           type
         }
