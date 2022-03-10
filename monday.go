@@ -66,6 +66,9 @@ func (c Client) GetItemsByColumnValues(boardID int, columnID string, columnValue
           value
           type
         }
+        assets {
+          public_url
+        }
       }
     }
     `)
