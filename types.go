@@ -2,8 +2,9 @@ package monday
 
 // Board represents a Monday Board
 type Board struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID      string   `json:"id"`
+	Name    string   `json:"name"`
+	Columns []Column `json:"columns"`
 }
 
 // Group represents a Monday Group

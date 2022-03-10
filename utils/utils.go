@@ -23,33 +23,37 @@ func DecodeDropDown(valueIn string) []string {
 	return result
 }
 
+type StatusLabels struct {
+	Labels         map[string]string `json:"labels"`             // index: label
+	LabelPositions map[string]int    `json:"label_positions_v1"` // index: position
+}
+
 // DecodeLabels displays index value of all labels for a column. Uses column settings_str (see GetColumns).
 // Use for Status(color) and Dropdown fields.
-func DecodeLabels(settingsStr, columnType string) {
-	var statusLabels struct {
-		Labels         map[string]string `json:"labels"`             // index: label
-		LabelPositions map[string]int    `json:"label_positions_v1"` // index: position
-	}
-	type dropdownEntry struct {
-		ID   int    `json:"id"`
-		Name string `json:"name"`
-	}
-	var dropdownLabels struct {
-		Labels []dropdownEntry `json:"labels"`
-	}
+func DecodeLabels(settingsStr, columnType string) (StatusLabels, error) {
+	var statusLabels StatusLabels
+	//	type dropdownEntry struct {
+	//		ID   int    `json:"id"`
+	//		Name string `json:"name"`
+	//	}
+	//var dropdownLabels struct {
+	//	Labels []dropdownEntry `json:"labels"`
+	//}
 
-	if columnType == "color" {
-		err := json.Unmarshal([]byte(settingsStr), &statusLabels)
-		if err != nil {
-			log.Fatal("DecodeLabels Failed", err)
-		}
+	//	if columnType == "color" {
+	err := json.Unmarshal([]byte(settingsStr), &statusLabels)
+	if err != nil {
+		return StatusLabels{}, err
 	}
-	if columnType == "dropdown" {
-		err := json.Unmarshal([]byte(settingsStr), &dropdownLabels)
-		if err != nil {
-			log.Fatal("DecodeLabels Failed", err)
-		}
-	}
+	return statusLabels, nil
+	//	}
+	//if columnType == "dropdown" {
+	//	err := json.Unmarshal([]byte(settingsStr), &dropdownLabels)
+	//	if err != nil {
+	//		log.Fatal("DecodeLabels Failed", err)
+	//	}
+	//	return dropdownLabels
+	//}
 }
 
 func BuildDate(date string) DateTime {

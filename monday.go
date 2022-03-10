@@ -15,6 +15,7 @@ import (
 // Service represents the Monday Service interface
 type Service interface {
 	GetBoards() ([]Board, error)
+	GetBoard() (Board, error)
 	GetItemsByColumnValues(boardID int, columnID string, columnValue string) ([]Item, error)
 	AddItem(boardID int, itemName string, columnValues map[string]interface{}) (string, error)
 	AddSubItem(parentItemID int, itemName string, columnValues map[string]interface{}) (string, error)
@@ -35,6 +36,33 @@ func NewClient() Client {
 		client:      graphql.NewClient("https://api.monday.com/v2/"),
 		filesClient: graphql.NewClient("https://api.monday.com/v2/file"),
 	}
+}
+
+// GetBoard obtains a single board with its respective columns
+func (c Client) GetBoard(boardID int) (Board, error) {
+	req := graphql.NewRequest(`
+    query ($boardID: Int!) {
+        boards(ids: $boardID) {
+          id
+          name
+          columns {
+            id
+            title
+            type
+            settings_str
+          }
+        }
+    }`)
+
+	var boards struct {
+		Boards []Board `json:"boards"`
+	}
+
+	if err := c.runRequest(req, &boards); err != nil {
+		return Board{}, err
+	}
+
+	return boards.Boards[0], nil
 }
 
 // GetBoards returns []Board for all boards.
@@ -76,12 +104,30 @@ func (c Client) GetItemsByColumnValues(boardID int, columnID string, columnValue
 	req.Var("columnID", columnID)
 	req.Var("columnValue", columnValue)
 	var response ItemsByColumnValues
+
 	err := c.runRequest(req, &response)
 	if err != nil {
 		return nil, err
 	}
 
-	return response.Items, nil
+	board, err := c.GetBoard(boardID)
+
+	var columns []Column
+	for _, col := range board.Columns {
+		if col.Type == "color" {
+			column = col
+			break
+		}
+	}
+
+	if column == (Column{}) || err != nil {
+		return response.Items, nil
+	}
+
+	for _, item := range response.Items {
+
+	}
+
 }
 
 // Example of creating columnValues for AddItem
@@ -333,4 +379,7 @@ func (c Client) runRequestWithFile(req *graphql.Request, response interface{}) e
 	graphql.UseMultipartForm()(c.filesClient)
 	err := c.filesClient.Run(ctx, req, response)
 	return err
+}
+
+func decodeColumnValues(columns []Column, items []Item) ([]ColumnValue, error) {
 }
