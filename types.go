@@ -31,11 +31,31 @@ type ColumnValue struct {
 	Type  string `json:"type"`
 }
 
+type User struct {
+	ID    string `json:"id"`
+	Email string `json:"email"`
+}
+
+// Asset
+type Asset struct {
+	ID               string `json:"id"`
+	Name             string `json:"name"`
+	OriginalGeometry string `json:"original_geometry"`
+	CreatedAt        string `json:"created_at"`
+	PublicURL        string `json:"public_url"`
+	URL              string `json:"url"`
+	URLThumbnail     string `json:"url_thumbnail"`
+	FileExtension    string `json:"file_extension"`
+	UploadedBy       User   `json:"uploaded_by"`
+	FileSize         string `json:"file_size"`
+}
+
 // Item represents an Item in Monday
 type Item struct {
 	ID           string        `json:"id"`
 	Name         string        `json:"name"`
 	ColumnValues []ColumnValue `json:"column_values"`
+	Assets       []Asset       `json:"assets"`
 }
 
 type ItemsByColumnValues struct {

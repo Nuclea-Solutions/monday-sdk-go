@@ -53,7 +53,7 @@ func (c Client) GetBoards() ([]Board, error) {
 	return response.Boards, err
 }
 
-// ItemsByColumnValues returns []Item filtered by a the value of a column
+// GetItemsByColumnValues returns []Item filtered by a the value of a column
 func (c Client) GetItemsByColumnValues(boardID int, columnID string, columnValue string) ([]Item, error) {
 	req := graphql.NewRequest(`
     query ($boardID: Int!, $columnID: String!, $columnValue: String!) {
