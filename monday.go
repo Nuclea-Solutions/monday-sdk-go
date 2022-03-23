@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"io"
 	"log"
-	"os"
 	"strconv"
 
 	"github.com/Nuclea-Solutions/graphql"
@@ -27,13 +26,15 @@ type Service interface {
 type Client struct {
 	client      *graphql.Client
 	filesClient *graphql.Client
+	apiToken    string
 }
 
 // NewClient creates a graphql client (safe to share across requests)
-func NewClient() Client {
+func NewClient(apiToken string) Client {
 	return Client{
 		client:      graphql.NewClient("https://api.monday.com/v2/"),
 		filesClient: graphql.NewClient("https://api.monday.com/v2/file"),
+		apiToken:    apiToken,
 	}
 }
 
@@ -317,7 +318,7 @@ func (c Client) AddFileToColumn(itemID int, columnID string, fileName string, fi
 
 func (c Client) runRequest(req *graphql.Request, response interface{}) error {
 	req.Header.Set("Cache-Control", "no-cache")
-	req.Header.Set("Authorization", os.Getenv("MONDAY_API_TOKEN"))
+	req.Header.Set("Authorization", c.apiToken)
 	req.Header.Set("Content-Type", "application/json")
 	ctx := context.Background()
 	err := c.client.Run(ctx, req, response)
@@ -326,7 +327,7 @@ func (c Client) runRequest(req *graphql.Request, response interface{}) error {
 
 func (c Client) runRequestWithFile(req *graphql.Request, response interface{}) error {
 	req.Header.Set("Cache-Control", "no-cache")
-	req.Header.Set("Authorization", os.Getenv("MONDAY_API_TOKEN"))
+	req.Header.Set("Authorization", c.apiToken)
 	req.Header.Set("Content-Type", "multipart/form-data")
 	ctx := context.Background()
 	// Specify graphql package we are using MultiPartForm
